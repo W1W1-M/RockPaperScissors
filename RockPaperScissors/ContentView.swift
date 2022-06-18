@@ -10,21 +10,22 @@ import SwiftUI
 struct ContentView: View {
 // MARK: - Properties
     @State var AiItem: Item = .rock
+    @State var AiWantedResult: Result = .tie
     @State var AiMustLoose: Bool = false
     @State var playerItem: Item = .rock
     @State var playerScore: Int = 0
     @State var totalGameRounds: Int = 10
     @State var gameRounds: Int = 0
     @State var roundResult: Result = .tie
-    enum Item: CaseIterable {
-        case rock
-        case paper
-        case scissors
+    enum Item: String, CaseIterable {
+        case rock = "Rock 🪨"
+        case paper = "Paper 📄"
+        case scissors = "Scissors ✂️"
     }
-    enum Result {
-        case won
-        case lost
-        case tie
+    enum Result: String {
+        case won = "Win 🥇"
+        case lost = "Loose 🥈"
+        case tie = "Tie 🏁"
     }
 // MARK: - Methods
     func checkRoundResult() {
@@ -106,8 +107,67 @@ struct ContentView: View {
     }
 // MARK: - ContentView body
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        ZStack {
+            LinearGradient(colors: [.gray, .yellow], startPoint: .bottom, endPoint: .top).ignoresSafeArea()
+            ScrollView {
+                VStack {
+                    VStack(spacing: 10) {
+                        Text("Happy HAL").font(.largeTitle.bold())
+                        Text("Satisfy HAL to earn points").font(.subheadline)
+                        Text("\(playerScore) points")
+                            .font(.title.bold())
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(radius: 10)
+                    }.padding(.vertical)
+                    HALView()
+                    VStack {
+                        Text("HAL wants to play Rock, Paper, Scissors")
+                            .font(.headline)
+                            .foregroundStyle(.ultraThickMaterial)
+                            .padding(.vertical)
+                        VStack(spacing: 10) {
+                            HStack {
+                                Spacer()
+                                Text("HAL choses").font(.title3)
+                                Spacer()
+                            }
+                            HStack {
+                                Spacer()
+                                Text(AiWantedResult.rawValue)
+                                Spacer()
+                                Text(AiItem.rawValue)
+                                Spacer()
+                            }.font(.largeTitle)
+                        }.frame(maxWidth: .infinity)
+                        .padding(.vertical)
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(radius: 10)
+                    }
+                    VStack {
+                        Text("Pick carefully to make HAL happy")
+                            .font(.headline)
+                            .foregroundStyle(.ultraThickMaterial)
+                            .padding(.vertical)
+                        HStack {
+                            ForEach(Item.allCases, id: \.self) { Item in
+                                Button {
+                                    
+                                } label: {
+                                    Text(Item.rawValue)
+                                        .font(.headline)
+                                        .foregroundStyle(.black)
+                                        .shadow(radius: 5)
+                                }.padding()
+                                .background(.yellow)
+                                .clipShape(Capsule(style: .continuous))
+                                .shadow(radius: 5)
+                            }
+                        }
+                    }
+                }.padding()
+            }
+        }
     }
 }
 // MARK: - Previews

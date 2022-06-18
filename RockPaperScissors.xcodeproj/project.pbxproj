@@ -11,6 +11,7 @@
 		3D4607B9285DF3A00073D789 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4607B8285DF3A00073D789 /* ContentView.swift */; };
 		3D4607BB285DF3A20073D789 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4607BA285DF3A20073D789 /* Assets.xcassets */; };
 		3D4607BE285DF3A20073D789 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D4607BD285DF3A20073D789 /* Preview Assets.xcassets */; };
+		3D899C84285E6B6600242904 /* HALView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D899C83285E6B6600242904 /* HALView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		3D4607B8285DF3A00073D789 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		3D4607BA285DF3A20073D789 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D4607BD285DF3A20073D789 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		3D899C83285E6B6600242904 /* HALView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HALView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +53,9 @@
 		3D4607B5285DF3A00073D789 /* RockPaperScissors */ = {
 			isa = PBXGroup;
 			children = (
-				3D4607B6285DF3A00073D789 /* RockPaperScissorsApp.swift */,
 				3D4607B8285DF3A00073D789 /* ContentView.swift */,
+				3D899C83285E6B6600242904 /* HALView.swift */,
+				3D4607B6285DF3A00073D789 /* RockPaperScissorsApp.swift */,
 				3D4607BA285DF3A20073D789 /* Assets.xcassets */,
 				3D4607BC285DF3A20073D789 /* Preview Content */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D899C84285E6B6600242904 /* HALView.swift in Sources */,
 				3D4607B9285DF3A00073D789 /* ContentView.swift in Sources */,
 				3D4607B7285DF3A00073D789 /* RockPaperScissorsApp.swift in Sources */,
 			);
