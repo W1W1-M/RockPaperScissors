@@ -9,101 +9,156 @@ import SwiftUI
 // MARK: - Views
 struct ContentView: View {
 // MARK: - Properties
-    @State var AiItem: Item = .rock
+    @State var AiSelectedItem: Item = .rock
     @State var AiWantedResult: Result = .tie
-    @State var AiMustLoose: Bool = false
-    @State var playerItem: Item = .rock
+    @State var playerSelectedItem: Item = .rock
     @State var playerScore: Int = 0
-    @State var totalGameRounds: Int = 10
     @State var gameRounds: Int = 0
-    @State var roundResult: Result = .tie
+    @State var alertPresented: Bool = true
+    @State var alertToPresent: AlertType = .welcome
+    var maxGameRounds: Int = 10
     enum Item: String, CaseIterable {
         case rock = "Rock 🪨"
         case paper = "Paper 📄"
         case scissors = "Scissors ✂️"
     }
-    enum Result: String {
-        case won = "Win 🥇"
-        case lost = "Loose 🥈"
-        case tie = "Tie 🏁"
+    enum Result: String, CaseIterable {
+        case win = "🥇 Win"
+        case lose = "🥈 Lose"
+        case tie = "🏁 Tie"
+    }
+    enum AlertType: String {
+        case won = "Won 🥇"
+        case lost = "Lost 🥈"
+        case gameOver = "Game Over"
+        case welcome = "Welcome"
     }
 // MARK: - Methods
     func checkRoundResult() {
-        switch playerItem {
+        switch playerSelectedItem {
         case .rock:
-            switch AiItem {
+            switch AiSelectedItem {
             case .rock:
-                updatePlayerScore(roundResult: .tie)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .win)
+                }
             case .paper:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .lost)
-                } else {
-                    updatePlayerScore(roundResult: .won)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .win)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             case .scissors:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .won)
-                } else {
-                    updatePlayerScore(roundResult: .lost)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .win)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             }
         case .paper:
-            switch AiItem {
+            switch AiSelectedItem {
             case .rock:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .won)
-                } else {
-                    updatePlayerScore(roundResult: .lost)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .win)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             case .paper:
-                updatePlayerScore(roundResult: .tie)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .win)
+                }
             case .scissors:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .lost)
-                } else {
-                    updatePlayerScore(roundResult: .won)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .win)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             }
         case .scissors:
-            switch AiItem {
+            switch AiSelectedItem {
             case .rock:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .lost)
-                } else {
-                    updatePlayerScore(roundResult: .won)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .win)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             case .paper:
-                if AiMustLoose {
-                    updatePlayerScore(roundResult: .won)
-                } else {
-                    updatePlayerScore(roundResult: .lost)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .win)
+                case .tie:
+                    updatePlayerScore(roundResult: .lose)
                 }
             case .scissors:
-                updatePlayerScore(roundResult: .tie)
+                switch AiWantedResult {
+                case .win:
+                    updatePlayerScore(roundResult: .lose)
+                case .lose:
+                    updatePlayerScore(roundResult: .lose)
+                case .tie:
+                    updatePlayerScore(roundResult: .win)
+                }
             }
         }
         addGameRound()
+        checkLastRound()
     }
     func addGameRound() {
         gameRounds += 1
     }
     func updatePlayerScore(roundResult: Result) {
         switch roundResult {
-        case .won:
+        case .win:
             playerScore += 1
-        case .lost:
+            alertToPresent = .won
+        case .lose:
             playerScore -= 1
+            alertToPresent = .lost
         case .tie:
             playerScore = playerScore
         }
     }
     func resetRound() {
-        AiItem = Item.allCases[Int.random(in: 1...3)]
-        AiMustLoose = Bool.random()
+        AiSelectedItem = Item.allCases[Int.random(in: 0...2)]
+        AiWantedResult = Result.allCases[Int.random(in: 0...2)]
     }
     func resetGame() {
         playerScore = 0
         gameRounds = 0
+        resetRound()
+    }
+    func checkLastRound() {
+        if gameRounds == maxGameRounds {
+            alertToPresent = .gameOver
+            alertPresented = true
+        }
     }
 // MARK: - ContentView body
     var body: some View {
@@ -113,7 +168,6 @@ struct ContentView: View {
                 VStack {
                     VStack(spacing: 10) {
                         Text("Happy HAL").font(.largeTitle.bold())
-                        Text("Satisfy HAL to earn points").font(.subheadline)
                         Text("\(playerScore) points")
                             .font(.title.bold())
                             .foregroundStyle(.regularMaterial)
@@ -128,16 +182,18 @@ struct ContentView: View {
                         VStack(spacing: 10) {
                             HStack {
                                 Spacer()
-                                Text("HAL choses").font(.title3)
+                                Text("HAL choses to").font(.title)
                                 Spacer()
                             }
-                            HStack {
+                            HStack(alignment: .bottom) {
                                 Spacer()
                                 Text(AiWantedResult.rawValue)
                                 Spacer()
-                                Text(AiItem.rawValue)
+                                Text("with").font(.title)
                                 Spacer()
-                            }.font(.largeTitle)
+                                Text(AiSelectedItem.rawValue)
+                                Spacer()
+                            }.font(.title.bold())
                         }.frame(maxWidth: .infinity)
                         .padding(.vertical)
                         .background(.thinMaterial)
@@ -152,7 +208,9 @@ struct ContentView: View {
                         HStack {
                             ForEach(Item.allCases, id: \.self) { Item in
                                 Button {
-                                    
+                                    playerSelectedItem = Item
+                                    checkRoundResult()
+                                    alertPresented = true
                                 } label: {
                                     Text(Item.rawValue)
                                         .font(.headline)
@@ -162,6 +220,53 @@ struct ContentView: View {
                                 .background(.yellow)
                                 .clipShape(Capsule(style: .continuous))
                                 .shadow(radius: 5)
+                            }
+                        }.alert(isPresented: $alertPresented) {
+                            switch alertToPresent {
+                            case .won:
+                                return Alert(
+                                    title: Text("Round \(gameRounds) 🙌"),
+                                    message: Text("You made HAL happy, you get 1 point"),
+                                    dismissButton: .default(
+                                        Text("Next Round"),
+                                        action: {
+                                            resetRound()
+                                        }
+                                    )
+                                )
+                            case .lost:
+                                return Alert(
+                                    title: Text("Round \(gameRounds) 😰"),
+                                    message: Text("HAL didn't like that, you lose 1 point"),
+                                    dismissButton: .default(
+                                        Text("Next Round"),
+                                        action: {
+                                            resetRound()
+                                        }
+                                    )
+                                )
+                            case .gameOver:
+                                return Alert(
+                                    title: Text("Game Over"),
+                                    message: Text("You scored \(playerScore) points"),
+                                    dismissButton: .default(
+                                        Text("New Game"),
+                                        action: {
+                                            resetGame()
+                                        }
+                                    )
+                                )
+                            case .welcome:
+                                return Alert(
+                                    title: Text("Welcome to Happy HAL"),
+                                    message: Text("Satisfy HAL to earn points"),
+                                    dismissButton: .default(
+                                        Text("Start Game"),
+                                        action: {
+                                            resetGame()
+                                        }
+                                    )
+                                )
                             }
                         }
                     }
